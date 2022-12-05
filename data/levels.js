@@ -2,10 +2,10 @@ export default [
   {
     text: "Buffalo buffalo Buffalo buffalo buffalo buffalo Buffalo buffalo.",
     emojis: ["🐃", "😕", "🇺🇸"],
-    starReqs: [30, 25, 20],
+    starReqs: [35, 30, 27],
   },
   {
-    text: "Little babe is little.",
+    text: "Test test.",
     emojis: ["🐃", "😕", "🇺🇸"],
     starReqs: [30, 25, 20],
   },

@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import { useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, SafeAreaView, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, SafeAreaView, ScrollView, KeyboardAvoidingView } from 'react-native';
 import Level from './components/Level';
 import LevelSelect from './components/LevelSelect';
 import TopBar from './components/TopBar';
@@ -19,11 +19,13 @@ export default function App() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar style="light" />
-      <TopBar levelNumber={levelNumber} setLevelNumber={setLevelNumber} />
-      <View style={styles.content}>
-        {content()}
-      </View>
+      <KeyboardAvoidingView style={styles.keyboardAvoidingView} behavior='padding'>
+        <StatusBar style="light" />
+        <TopBar levelNumber={levelNumber} setLevelNumber={setLevelNumber} />
+        <View style={styles.content}>
+          {content()}
+        </View>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
@@ -34,6 +36,9 @@ const styles = StyleSheet.create({
     backgroundColor: 'black',
     alignItems: 'stretch',
     justifyContent: 'center',
+  },
+  keyboardAvoidingView: {
+    flex: 1,
   },
   title: {
     color: 'white',
