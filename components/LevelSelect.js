@@ -1,4 +1,4 @@
-import { StyleSheet, View, ScrollView, Text } from 'react-native';
+import { StyleSheet, View, ScrollView } from 'react-native';
 import LevelPreview from './LevelPreview';
 import levels from '../data/levels';
 

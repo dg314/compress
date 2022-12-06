@@ -1,4 +1,4 @@
-export default [
+const levels = [
   {
     text: "Buffalo buffalo Buffalo buffalo buffalo buffalo Buffalo buffalo.",
     emojis: ["🐃", "😕", "🇺🇸"],
@@ -30,3 +30,5 @@ export default [
     starReqs: [30, 25, 20],
   },
 ]
+
+export default levels;

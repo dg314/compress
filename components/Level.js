@@ -1,12 +1,14 @@
-import { useRef, useState } from 'react';
-import { StyleSheet, View, Text, ScrollView, TextInput, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
+import { useEffect, useRef, useState } from 'react';
+import { StyleSheet, View, ScrollView, TextInput, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import { numStars, emojiStrLen, formatText } from '../Utils';
+import MonoText from './MonoText';
+import StarGauge from './StarGauge';
 
 const maxCodeWordLength = 10;
 
-export default function Level({ levelNumber, level, spacesAsUnderscores }) {
-  const { text, emojis, starReqs } = level;
+export default function Level({ levelNumber, level, spacesAsUnderscores, levelBest, setLevelBest }) {
+  const { text, emojis } = level;
 
   const [codeWords, setCodeWords] = useState(emojis.map(_ => ""));
   const [selection, setSelection] = useState({ index: 0, start: 0, end: 0 });
@@ -23,16 +25,6 @@ export default function Level({ levelNumber, level, spacesAsUnderscores }) {
       return newCodeWords;
     });
   }
-
-  /*const selectionByIndex = (index) => {
-    if (index === selection.index) {
-      const { start, end } = selection;
-
-      return { start, end };
-    }
-
-    return undefined;
-  }*/
 
   const handleSelectionChange = (index, selection) => {
     const { start, end } = selection;
@@ -63,7 +55,7 @@ export default function Level({ levelNumber, level, spacesAsUnderscores }) {
 
   let compressedOutput = text;
   let score = 0;
-
+  
   for (let i = 0; i < emojis.length; i++) {
     if (codeWords[i]) {
       compressedOutput = compressedOutput.replaceAll(codeWords[i], emojis[i]);
@@ -73,17 +65,21 @@ export default function Level({ levelNumber, level, spacesAsUnderscores }) {
 
   score += emojiStrLen(compressedOutput);
 
-  const stars = numStars(score, starReqs);
+  useEffect(() => {
+    if (score < levelBest) {
+      setLevelBest(score);
+    }
+  }, [score]);
 
   return (
     <View style={styles.container}>
+      <View style={styles.starGaugeContainer}>
+        <StarGauge level={level} score={score} />
+      </View>
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollViewContent} keyboardShouldPersistTaps="always">
-        <View>
-          <Text style={{ color: 'white', marginBottom: 10 }}>Score: {score}</Text>
-        </View>
         <View style={styles.textContainers}>
           <View style={styles.textContainer}>
-            <Text style={styles.text}>{text}</Text>
+            <MonoText style={styles.text}>{text}</MonoText>
           </View>
           <View style={styles.textContainerDivider}>
             <View style={styles.arrowContainer}>
@@ -91,23 +87,23 @@ export default function Level({ levelNumber, level, spacesAsUnderscores }) {
             </View>
           </View>
           <View style={styles.textContainer}>
-            <Text style={styles.text}>{compressedOutput}</Text>
+            <MonoText style={styles.text}>{compressedOutput}</MonoText>
           </View>
         </View>
         <View style={styles.symbolBoxesContainer}>
           {emojis.map((emoji, index) => (
             <View key={index} style={styles.symbolBox}>
-              <Text>{emoji}</Text>
-              <TextInput ref={index === 0 ? inputRef : null} onLayout={() => inputRef.current.focus()} style={styles.textInput} autoFocus={index === 0} autoCorrect={false} spellCheck={false} autoCapitalize='none' selectionColor="#fff" value={codeWords[index]} onChangeText={(newValue) => setCodeWord(index, newValue)} selectTextOnFocus={true} onSelectionChange={(event) => handleSelectionChange(index, event.nativeEvent.selection)} onPressIn={() => handleFocusChange(index)} keyboardType='ascii-capable' keyboardAppearance='dark'/>
+              <MonoText>{emoji}</MonoText>
+              <TextInput ref={index === 0 ? inputRef : null} onFocus={() => handleFocusChange(index)} onLayout={() => inputRef.current.focus()} style={styles.textInput} autoFocus={index === 0} autoCorrect={false} spellCheck={false} autoCapitalize='none' selectionColor="#fff" value={codeWords[index]} onChangeText={(newValue) => setCodeWord(index, newValue)} selectTextOnFocus={true} onSelectionChange={(event) => handleSelectionChange(index, event.nativeEvent.selection)} keyboardType='ascii-capable' keyboardAppearance='dark'/>
             </View>
           ))}
         </View>
       </ScrollView>
-      <View style={styles.emojiKeyboard}>
+      <View style={[styles.emojiKeyboard, { height: selection.index === 0 ? 0 : 50 }]}>
         {emojis.slice(0, selection.index).map(emoji => (
           <TouchableOpacity activeOpacity={0.5} onPress={() => handleEmojiKeyPress(emoji)}>
             <View style={styles.emojiKey}>
-              <Text>{emoji}</Text>
+              <MonoText>{emoji}</MonoText>
             </View>
           </TouchableOpacity>
         ))}
@@ -127,18 +123,25 @@ const styles = StyleSheet.create({
   scrollViewContent: {
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 20,
+    padding: 15,
+    paddingTop: 5,
+  },
+  starGaugeContainer: {
+    backgroundColor: '#222',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingTop: 5,
   },
   textContainers: {
     width: '100%',
     alignContent: 'center',
-    backgroundColor: '#f2e3af',
-    marginBottom: 20,
+    backgroundColor: '#ddd',
+    marginBottom: 10,
     borderRadius: 15,
   },
   textContainer: {
     flexShrink: 1,
-    padding: 10,
+    padding: 12,
   },
   textContainerDivider: {
     height: 2,
@@ -154,13 +157,14 @@ const styles = StyleSheet.create({
   },
   text: {
     color: 'black',
-    fontSize: 15,
+    fontSize: 14,
   },
   textInput: {
     padding: 10,
     color: "#fff",
-    fontSize: 15,
+    fontSize: 14,
     flexGrow: 1,
+    fontFamily: 'Menlo',
   },
   symbolBoxesContainer: {
     flex: 1,
@@ -170,26 +174,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  finishButton: {
-    borderRadius: 15,
-    borderWidth: 3,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 30,
-    paddingVertical: 10,
-    marginTop: 20,
-  },
-  finishText: {
-    fontSize: 20,
-    fontWeight: '600',
-    color: 'black',
-  },
   emojiKeyboard: {
-    height: 50,
     backgroundColor: '#2b2b2b',
     justifyContent: 'space-evenly',
     alignItems: 'center',
     flexDirection: 'row',
+    borderTopWidth: 2,
+    borderColor: 'black',
   },
   emojiKey: {
     width: 80,

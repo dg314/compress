@@ -1,25 +1,15 @@
+export const starLightColor = (stars) => {
+  return ['#fff', '#EBA258', '#d2cdd5', '#FFD700'][stars];
+}
+
+export const starDarkColor = (stars) => {
+  return ['#ddd', '#CD7F32', '#a7a5aa', '#D1B000'][stars];
+}
+
 export const starContainerStyles = (stars) => {
-  switch (stars) {
-    case 3:
-      return {
-        backgroundColor: '#D1B000',
-        borderColor: '#FFD700'
-      }
-    case 2:
-      return {
-        backgroundColor: '#a7a5aa',
-        borderColor: '#d2cdd5'
-      }
-    case 1:
-      return {
-        backgroundColor: '#CD7F32',
-        borderColor: '#EBA258'
-      }
-    default:
-      return {
-        backgroundColor: '#ccc',
-        borderColor: '#eee'
-      }
+  return {
+    backgroundColor: starDarkColor(stars),
+    borderColor: starLightColor(stars),
   }
 };
 
