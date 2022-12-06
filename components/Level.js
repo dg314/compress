@@ -1,9 +1,11 @@
 import { useRef, useState } from 'react';
 import { StyleSheet, View, Text, ScrollView, TextInput, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
-import { numStars, emojiStrLen } from '../Utils';
+import { numStars, emojiStrLen, formatText } from '../Utils';
 
-export default function Level({ levelNumber, level }) {
+const maxCodeWordLength = 10;
+
+export default function Level({ levelNumber, level, spacesAsUnderscores }) {
   const { text, emojis, starReqs } = level;
 
   const [codeWords, setCodeWords] = useState(emojis.map(_ => ""));
@@ -12,12 +14,25 @@ export default function Level({ levelNumber, level }) {
   const inputRef = useRef();
 
   const setCodeWord = (index, value) => {
+    if (emojiStrLen(value) > maxCodeWordLength) return;
+
     setCodeWords(codeWords => {
       const newCodeWords = [...codeWords];
-      newCodeWords[index] = value;
+      newCodeWords[index] = formatText(value, spacesAsUnderscores);
+
       return newCodeWords;
-    })
+    });
   }
+
+  /*const selectionByIndex = (index) => {
+    if (index === selection.index) {
+      const { start, end } = selection;
+
+      return { start, end };
+    }
+
+    return undefined;
+  }*/
 
   const handleSelectionChange = (index, selection) => {
     const { start, end } = selection;
@@ -30,6 +45,20 @@ export default function Level({ levelNumber, level }) {
       ...selection,
       index
     });
+  }
+
+  const handleEmojiKeyPress = (emoji) => {
+    const { index, start, end } = selection;
+
+    const oldCodeWord = codeWords[index];
+
+    if (emojiStrLen(oldCodeWord) >= maxCodeWordLength) return;
+    
+    const newCodeWords = [...codeWords];
+    newCodeWords[index] = oldCodeWord.slice(0, start) + emoji + oldCodeWord.slice(end);
+
+    setCodeWords(newCodeWords);
+    setSelection({ index, start: start + emoji.length, end: start + emoji.length });
   }
 
   let compressedOutput = text;
@@ -46,13 +75,11 @@ export default function Level({ levelNumber, level }) {
 
   const stars = numStars(score, starReqs);
 
-  console.log(selection)
-
   return (
     <View style={styles.container}>
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollViewContent} keyboardShouldPersistTaps="always">
         <View>
-          <Text>Score: {score}</Text>
+          <Text style={{ color: 'white', marginBottom: 10 }}>Score: {score}</Text>
         </View>
         <View style={styles.textContainers}>
           <View style={styles.textContainer}>
@@ -78,9 +105,11 @@ export default function Level({ levelNumber, level }) {
       </ScrollView>
       <View style={styles.emojiKeyboard}>
         {emojis.slice(0, selection.index).map(emoji => (
-          <View style={styles.emojiKey}>
-            <Text>{emoji}</Text>
-          </View>
+          <TouchableOpacity activeOpacity={0.5} onPress={() => handleEmojiKeyPress(emoji)}>
+            <View style={styles.emojiKey}>
+              <Text>{emoji}</Text>
+            </View>
+          </TouchableOpacity>
         ))}
       </View>
     </View>

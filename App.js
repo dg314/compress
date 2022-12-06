@@ -5,6 +5,9 @@ import Level from './components/Level';
 import LevelSelect from './components/LevelSelect';
 import TopBar from './components/TopBar';
 import levels from './data/levels';
+import { formatText } from './Utils';
+
+const spacesAsUnderscores = true;
 
 export default function App() {
   const [levelNumber, setLevelNumber] = useState(0);
@@ -13,7 +16,10 @@ export default function App() {
     if (levelNumber === 0) {
       return <LevelSelect setLevelNumber={setLevelNumber} />
     } else {
-      return <Level levelNumber={levelNumber} level={levels[levelNumber - 1]}/>;
+      let level = levels[levelNumber - 1]
+      level.text = formatText(level.text, spacesAsUnderscores);
+
+      return <Level levelNumber={levelNumber} level={levels[levelNumber - 1]} spacesAsUnderscores={spacesAsUnderscores}/>;
     }
   }
 
