@@ -24,8 +24,6 @@ export default function App() {
     return null;
   })();
 
-  console.log(levelBests);
-
   const content = () => {
     if (levelNumber === 0) {
       return <LevelSelect setLevelNumber={setLevelNumber} levelBests={levelBests} />
@@ -52,7 +50,6 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    console.log("Saving...")
     storeLevelBests(levelBests);
   }, [levelBests]);
 
