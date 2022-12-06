@@ -1,13 +1,16 @@
-import { useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { StyleSheet, View, ScrollView, TextInput, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import { numStars, emojiStrLen, formatText } from '../Utils';
 import MonoText from './MonoText';
 import StarGauge from './StarGauge';
+import AppContext from '../contexts/AppContext';
+import levels from '../data/levels';
 
 const maxCodeWordLength = 10;
 
-export default function Level({ levelNumber, level, spacesAsUnderscores, levelBest, setLevelBest }) {
+export default function Level({ spacesAsUnderscores }) {
+  const { levelNumber, levelBest, setLevelBest, level } = useContext(AppContext);
   const { text, emojis } = level;
 
   const [codeWords, setCodeWords] = useState(emojis.map(_ => ""));

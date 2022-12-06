@@ -4,8 +4,13 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import MonoText from './MonoText';
 import { numStars, starLightColor } from '../Utils';
 import levels from '../data/levels';
+import { useContext } from 'react';
+import AppContext from '../contexts/AppContext';
 
-export default function TopBar({ levelNumber, setLevelNumber, levelBest, starReqs }) {
+export default function TopBar() {
+  const { levelNumber, setLevelNumber, levelBest, level } = useContext(AppContext);
+  const { starReqs } = level;
+
   const stars = starReqs ? numStars(levelBest, starReqs) : 0;
 
   const decrementDisabled = levelNumber <= 1;
