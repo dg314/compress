@@ -14,6 +14,10 @@ export const starContainerStyles = (stars) => {
 };
 
 export const numStars = (score, starReqs) => {
+  if (score == null || starReqs == null) {
+    return 0;
+  }
+
   for (let i = 2; i >= 0; i--) {
     if (score <= starReqs[i]) {
       return i + 1;

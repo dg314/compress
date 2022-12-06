@@ -58,7 +58,7 @@ export default function StarGauge({ level, score }) {
         </View>
       </View>
       <View style={styles.starReqBox}>
-        {starReqs.map((starReq, index) => <MonoText style={styles.starReqLabel}>{starReq}</MonoText>)}
+        {starReqs.map((starReq, index) => <MonoText key={index} style={styles.starReqLabel}>{starReq}</MonoText>)}
       </View>
     </View>
   );

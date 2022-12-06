@@ -15,7 +15,7 @@ export default function TopBar({ levelNumber, setLevelNumber, levelBest, starReq
         </TouchableOpacity>}
       </View>
       <View style={styles.buttonsRightContainer}>
-        {levelNumber > 0 && <View style={styles.bestContainer}>
+        {levelNumber > 0 && levelBest && <View style={styles.bestContainer}>
           {stars && stars > 0 ? <>
             <MonoText style={styles.bestText}>Best:{" "}</MonoText>
             <View style={[styles.scoreCircle, { backgroundColor: starLightColor(stars) }]}>

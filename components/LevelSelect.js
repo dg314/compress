@@ -1,12 +1,13 @@
 import { StyleSheet, View, ScrollView } from 'react-native';
 import LevelPreview from './LevelPreview';
 import levels from '../data/levels';
+import { numStars } from '../Utils';
 
-export default function LevelSelect({ setLevelNumber }) {
+export default function LevelSelect({ setLevelNumber, levelBests }) {
   return (
     <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollViewContent}>
       <View style={styles.levelsContainer}>
-        {levels.map((level, index) => <LevelPreview key={index} levelNumber={index + 1} stars={Math.min(index, 3)} selectSelf={() => setLevelNumber(index + 1)} />)}
+        {levels.map((level, index) => <LevelPreview key={index} levelNumber={index + 1} stars={numStars(levelBests[index], level.starReqs)} selectSelf={() => setLevelNumber(index + 1)} />)}
       </View> 
     </ScrollView>
   );

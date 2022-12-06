@@ -66,7 +66,7 @@ export default function Level({ levelNumber, level, spacesAsUnderscores, levelBe
   score += emojiStrLen(compressedOutput);
 
   useEffect(() => {
-    if (score < levelBest) {
+    if (!levelBest || score < levelBest) {
       setLevelBest(score);
     }
   }, [score]);
@@ -100,8 +100,8 @@ export default function Level({ levelNumber, level, spacesAsUnderscores, levelBe
         </View>
       </ScrollView>
       <View style={[styles.emojiKeyboard, { height: selection.index === 0 ? 0 : 50 }]}>
-        {emojis.slice(0, selection.index).map(emoji => (
-          <TouchableOpacity activeOpacity={0.5} onPress={() => handleEmojiKeyPress(emoji)}>
+        {emojis.slice(0, selection.index).map((emoji, index) => (
+          <TouchableOpacity key={index} activeOpacity={0.5} onPress={() => handleEmojiKeyPress(emoji)}>
             <View style={styles.emojiKey}>
               <MonoText>{emoji}</MonoText>
             </View>

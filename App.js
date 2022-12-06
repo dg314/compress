@@ -1,17 +1,18 @@
 import { StatusBar } from 'expo-status-bar';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { StyleSheet, View, TouchableOpacity, SafeAreaView, ScrollView, KeyboardAvoidingView } from 'react-native';
 import Level from './components/Level';
 import LevelSelect from './components/LevelSelect';
 import TopBar from './components/TopBar';
 import levels from './data/levels';
+import { fetchLevelBests, storeLevelBests } from './storage/levelBests';
 import { formatText } from './Utils';
 
 const spacesAsUnderscores = false;
 
 export default function App() {
   const [levelNumber, setLevelNumber] = useState(0);
-  const [levelBests, setLevelBests] = useState(levels.map(() => 100));
+  const [levelBests, setLevelBests] = useState(levels.map(() => null));
 
   const level = (() => {
     if (levelNumber > 0) {
@@ -23,13 +24,15 @@ export default function App() {
     return null;
   })();
 
+  console.log(levelBests);
+
   const content = () => {
     if (levelNumber === 0) {
-      return <LevelSelect setLevelNumber={setLevelNumber} />
+      return <LevelSelect setLevelNumber={setLevelNumber} levelBests={levelBests} />
     } else {
       const levelBest = levelBests[levelNumber - 1];
       const setLevelBest = (newBest) => {
-        if (newBest >= levelBest) return;
+        if (levelBest && newBest >= levelBest) return;
 
         setLevelBests(levelBests => {
           const newLevelBests = [...levelBests];
@@ -41,6 +44,17 @@ export default function App() {
       return <Level levelNumber={levelNumber} level={level} spacesAsUnderscores={spacesAsUnderscores} levelBest={levelBest} setLevelBest={setLevelBest} />;
     }
   }
+
+  useEffect(() => {
+    fetchLevelBests(levels.length).then(levelBests => {
+      setLevelBests(levelBests);
+    })
+  }, []);
+
+  useEffect(() => {
+    console.log("Saving...")
+    storeLevelBests(levelBests);
+  }, [levelBests]);
 
   return (
     <SafeAreaView style={styles.container}>
