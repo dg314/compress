@@ -1,16 +1,14 @@
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
-import { FontAwesome } from '@expo/vector-icons';
-import { starContainerStyles } from "../Utils";
+import { numStars, starContainerStyles } from "../Utils";
 import MonoText from './MonoText';
 
-export default function LevelPreview({ levelNumber, stars, selectSelf }) {
+export default function LevelPreview({ levelNumber, levelBest, starReqs, selectSelf }) {
+  const stars = numStars(levelBest, starReqs);
+
   return (
     <TouchableOpacity activeOpacity={0.5} onPress={selectSelf}>
       <View style={[styles.levelContainer, starContainerStyles(stars)]}>
         <MonoText style={styles.levelText}>{levelNumber}</MonoText>
-        {/*<View style={styles.stars}>
-          {Array(3).fill().map((_, index) => <FontAwesome name="star" size={18} color={index < stars ? '#fde047' : '#80808080'} style={styles.star} />)}
-        </View>*/}
       </View>
     </TouchableOpacity>
   );

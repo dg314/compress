@@ -7,7 +7,7 @@ export default function LevelSelect({ setLevelNumber, levelBests }) {
   return (
     <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollViewContent}>
       <View style={styles.levelsContainer}>
-        {levels.map((level, index) => <LevelPreview key={index} levelNumber={index + 1} stars={numStars(levelBests[index], level.starReqs)} selectSelf={() => setLevelNumber(index + 1)} />)}
+        {levels.map((level, index) => <LevelPreview key={index} levelNumber={index + 1} levelBest={levelBests[index]} starReqs={level.starReqs} selectSelf={() => setLevelNumber(index + 1)} />)}
       </View> 
     </ScrollView>
   );
