@@ -11,7 +11,9 @@ export default function Game() {
   switch (screenName) {
     case 'level-select':
       return <LevelSelect />;
-    default:
+    case 'level':
       return <Level spacesAsUnderscores={spacesAsUnderscores} />;
+    default:
+      return null;
   }
 };

@@ -1,16 +1,16 @@
 import { useContext, useEffect, useRef, useState } from 'react';
 import { StyleSheet, View, ScrollView, TextInput, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
-import { numStars, emojiStrLen, formatText } from '../Utils';
+import { emojiStrLen, formatText } from '../Utils';
 import MonoText from './MonoText';
 import StarGauge from './StarGauge';
 import AppContext from '../contexts/AppContext';
-import levels from '../data/levels';
+import LevelTopBar from './LevelTopBar';
 
 const maxCodeWordLength = 10;
 
 export default function Level({ spacesAsUnderscores }) {
-  const { levelNumber, levelBest, setLevelBest, level } = useContext(AppContext);
+  const { levelBest, setLevelBest, level } = useContext(AppContext);
   const { text, emojis } = level;
 
   const [codeWords, setCodeWords] = useState(emojis.map(_ => ""));
@@ -75,43 +75,46 @@ export default function Level({ spacesAsUnderscores }) {
   }, [score]);
 
   return (
-    <View style={styles.container}>
-      <View style={styles.starGaugeContainer}>
-        <StarGauge level={level} score={score} />
-      </View>
-      <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollViewContent} keyboardShouldPersistTaps="always">
-        <View style={styles.textContainers}>
-          <View style={styles.textContainer}>
-            <MonoText style={styles.text}>{text}</MonoText>
-          </View>
-          <View style={styles.textContainerDivider}>
-            <View style={styles.arrowContainer}>
-              <AntDesign name="arrowdown" size={20} style={styles.dividerArrow} color="black" />
-            </View>
-          </View>
-          <View style={styles.textContainer}>
-            <MonoText style={styles.text}>{compressedOutput}</MonoText>
-          </View>
+    <>
+      <LevelTopBar />
+      <View style={styles.container}>
+        <View style={styles.starGaugeContainer}>
+          <StarGauge level={level} score={score} />
         </View>
-        <View style={styles.symbolBoxesContainer}>
-          {emojis.map((emoji, index) => (
-            <View key={index} style={styles.symbolBox}>
-              <MonoText>{emoji}</MonoText>
-              <TextInput ref={index === 0 ? inputRef : null} onFocus={() => handleFocusChange(index)} onLayout={() => inputRef.current.focus()} style={styles.textInput} autoFocus={index === 0} autoCorrect={false} spellCheck={false} autoCapitalize='none' selectionColor="#fff" value={codeWords[index]} onChangeText={(newValue) => setCodeWord(index, newValue)} selectTextOnFocus={true} onSelectionChange={(event) => handleSelectionChange(index, event.nativeEvent.selection)} keyboardType='ascii-capable' keyboardAppearance='dark'/>
+        <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollViewContent} keyboardShouldPersistTaps="always">
+          <View style={styles.textContainers}>
+            <View style={styles.textContainer}>
+              <MonoText style={styles.text}>{text}</MonoText>
             </View>
+            <View style={styles.textContainerDivider}>
+              <View style={styles.arrowContainer}>
+                <AntDesign name="arrowdown" size={20} style={styles.dividerArrow} color="black" />
+              </View>
+            </View>
+            <View style={styles.textContainer}>
+              <MonoText style={styles.text}>{compressedOutput}</MonoText>
+            </View>
+          </View>
+          <View style={styles.symbolBoxesContainer}>
+            {emojis.map((emoji, index) => (
+              <View key={index} style={styles.symbolBox}>
+                <MonoText>{emoji}</MonoText>
+                <TextInput ref={index === 0 ? inputRef : null} onFocus={() => handleFocusChange(index)} onLayout={() => inputRef.current.focus()} style={styles.textInput} autoFocus={index === 0} autoCorrect={false} spellCheck={false} autoCapitalize='none' selectionColor="#fff" value={codeWords[index]} onChangeText={(newValue) => setCodeWord(index, newValue)} selectTextOnFocus={true} onSelectionChange={(event) => handleSelectionChange(index, event.nativeEvent.selection)} keyboardType='ascii-capable' keyboardAppearance='dark'/>
+              </View>
+            ))}
+          </View>
+        </ScrollView>
+        <View style={[styles.emojiKeyboard, { height: selection.index === 0 ? 0 : 50 }]}>
+          {emojis.slice(0, selection.index).map((emoji, index) => (
+            <TouchableOpacity key={index} activeOpacity={0.5} onPress={() => handleEmojiKeyPress(emoji)}>
+              <View style={styles.emojiKey}>
+                <MonoText>{emoji}</MonoText>
+              </View>
+            </TouchableOpacity>
           ))}
         </View>
-      </ScrollView>
-      <View style={[styles.emojiKeyboard, { height: selection.index === 0 ? 0 : 50 }]}>
-        {emojis.slice(0, selection.index).map((emoji, index) => (
-          <TouchableOpacity key={index} activeOpacity={0.5} onPress={() => handleEmojiKeyPress(emoji)}>
-            <View style={styles.emojiKey}>
-              <MonoText>{emoji}</MonoText>
-            </View>
-          </TouchableOpacity>
-        ))}
       </View>
-    </View>
+    </>
   );
 }
 

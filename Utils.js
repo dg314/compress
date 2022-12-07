@@ -13,7 +13,7 @@ export const starContainerStyles = (stars) => {
   }
 };
 
-export const numStars = (score, starReqs) => {
+export const calcNumStars = (score, starReqs) => {
   if (score == null || starReqs == null) {
     return 0;
   }

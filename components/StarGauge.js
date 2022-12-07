@@ -1,5 +1,5 @@
 import { StyleSheet, View } from 'react-native';
-import { numStars, starContainerStyles, starLightColor } from '../Utils';
+import { calcNumStars, starContainerStyles, starLightColor } from '../Utils';
 import MonoText from './MonoText';
 
 const starGaugeHeight = 30;
@@ -7,23 +7,23 @@ const starGaugeHeight = 30;
 export default function StarGauge({ level, score }) {
   const { text, starReqs } = level;
 
-  const stars = numStars(score, starReqs);
+  const stars = calcNumStars(score, starReqs);
   
   const bestScore = starReqs[2] - 5;
   const worstScore = text.length;
 
-  let scoreLeft = 5;
+  let scoreLeft = 6;
 
   if (score <= worstScore && score > starReqs[0]) {
-    scoreLeft = (worstScore - score) / (worstScore - starReqs[0]) * 45 + 5;
+    scoreLeft = (worstScore - score) / (worstScore - starReqs[0]) * 44 + 6;
   } else if (score <= starReqs[0] && score > starReqs[1]) {
     scoreLeft = (starReqs[0] - score) / (starReqs[0] - starReqs[1]) * 60 + 50;
   } else if (score <= starReqs[1] && score > starReqs[2]) {
     scoreLeft = (starReqs[1] - score) / (starReqs[1] - starReqs[2]) * 60 + 110;
   } else if (score <= starReqs[2] && score > bestScore) {
-    scoreLeft = (starReqs[2] - score) / (starReqs[2] - bestScore) * 45 + 170;
+    scoreLeft = (starReqs[2] - score) / (starReqs[2] - bestScore) * 44 + 170;
   } else if (score <= bestScore) {
-    scoreLeft = 215;
+    scoreLeft = 214;
   }
 
   const colorBarBorderStyle = (index) => {

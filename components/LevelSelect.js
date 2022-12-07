@@ -1,7 +1,6 @@
 import { StyleSheet, View, ScrollView } from 'react-native';
 import LevelPreview from './LevelPreview';
 import levels from '../data/levels';
-import { numStars } from '../Utils';
 import { useContext } from 'react';
 import AppContext from '../contexts/AppContext';
 import TopBar from './TopBar';
@@ -11,10 +10,10 @@ export default function LevelSelect() {
 
   return (
     <>
-      <TopBar />
+      <TopBar title="Select Level" />
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollViewContent}>
         <View style={styles.levelsContainer}>
-          {levels.map((level, index) => <LevelPreview key={index} levelNumber={index + 1} levelBest={levelBests[index]} starReqs={level.starReqs} selectSelf={() => setLevelNumber(index + 1)} />)}
+          {levels.map((level, index) => <LevelPreview key={index} levelNumber={index + 1} levelBest={levelBests[index]} starReqs={level.starReqs} />)}
         </View> 
       </ScrollView>
     </>
