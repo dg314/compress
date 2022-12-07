@@ -15,7 +15,15 @@ export const fetchLevelBests = async (numLevels) => {
     const levelBestsJSON = await AsyncStorage.getItem('levelBests');
 
     if (levelBestsJSON != null) {
-      return JSON.parse(levelBestsJSON);
+      const levelBests = JSON.parse(levelBestsJSON);
+
+      if (levelBests.length === numLevels) {
+        return levelBests;
+      } else if (levelBests.length > numLevels) {
+        return levelBests.slice(0, numLevels)
+      } else {
+        return levelBests.concat(Array(numLevels - levelBests.length).fill(null));
+      }
     } else {
       return Array(numLevels).fill(null);
     }

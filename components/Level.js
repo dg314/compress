@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { StyleSheet, View, ScrollView, TextInput, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import { emojiStrLen, formatText } from '../Utils';
@@ -10,11 +10,27 @@ import LevelTopBar from './LevelTopBar';
 const maxCodeWordLength = 10;
 
 export default function Level({ spacesAsUnderscores }) {
-  const { levelBest, setLevelBest, level } = useContext(AppContext);
+  const { levelBest, setLevelBest, level, levelNumber } = useContext(AppContext);
   const { text, emojis } = level;
 
   const [codeWords, setCodeWords] = useState(emojis.map(_ => ""));
   const [selection, setSelection] = useState({ index: 0, start: 0, end: 0 });
+
+  const [compressedOutput, score] = useMemo(() => {
+    let compressedOutput = text;
+    let score = 0;
+    
+    for (let i = 0; i < emojis.length; i++) {
+      if (codeWords[i]) {
+        compressedOutput = compressedOutput.replaceAll(codeWords[i], emojis[i]);
+        score += emojiStrLen(codeWords[i]);
+      }
+    }
+
+    score += emojiStrLen(compressedOutput);
+
+    return [compressedOutput, score];
+  }, [text, codeWords]);
 
   const inputRef = useRef();
 
@@ -56,23 +72,11 @@ export default function Level({ spacesAsUnderscores }) {
     setSelection({ index, start: start + emoji.length, end: start + emoji.length });
   }
 
-  let compressedOutput = text;
-  let score = 0;
-  
-  for (let i = 0; i < emojis.length; i++) {
-    if (codeWords[i]) {
-      compressedOutput = compressedOutput.replaceAll(codeWords[i], emojis[i]);
-      score += emojiStrLen(codeWords[i]);
-    }
-  }
-
-  score += emojiStrLen(compressedOutput);
-
   useEffect(() => {
     if (!levelBest || score < levelBest) {
       setLevelBest(score);
     }
-  }, [score]);
+  }, [score, levelNumber]);
 
   return (
     <>

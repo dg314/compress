@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import { StyleSheet, View, TouchableOpacity } from 'react-native';
-import { calcNumStars, starLightColor } from '../Utils';
+import { calcNumStars, starContainerStyles, starLightColor } from '../Utils';
 import MonoText from './MonoText';
 import AppContext from '../contexts/AppContext';
 import levels from '../data/levels';
@@ -49,7 +49,7 @@ export default function LevelTopBar() {
   const topBarRightContent = stars > 0 ? (
     <>
       <MonoText style={styles.bestText}>Best:{" "}</MonoText>
-      <View style={[styles.scoreCircle, { backgroundColor: starLightColor(stars) }]}>
+      <View style={[styles.scoreCircle, starContainerStyles(stars)]}>
         <MonoText style={styles.scoreText} adjustsFontSizeToFit={true} numberOfLines={1}>{levelBest}</MonoText>
       </View>
     </>
@@ -77,12 +77,13 @@ const styles = StyleSheet.create({
     marginRight: 12,
   },
   scoreCircle: {
-    width: 22,
-    height: 22,
+    width: 24,
+    height: 24,
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 11,
-    padding: 2,
+    borderRadius: 12,
+    padding: 3,
+    borderWidth: 2,
   },
   scoreText: {
     fontSize: 13,

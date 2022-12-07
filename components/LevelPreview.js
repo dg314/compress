@@ -3,6 +3,7 @@ import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import AppContext from '../contexts/AppContext';
 import { calcNumStars, starContainerStyles, starLightColor } from "../Utils";
 import MonoText from './MonoText';
+import { FontAwesome } from '@expo/vector-icons'; 
 
 export default function LevelPreview({ levelNumber, levelBest, starReqs }) {
   const { setScreenName, setLevelNumber } = useContext(AppContext);
@@ -18,9 +19,11 @@ export default function LevelPreview({ levelNumber, levelBest, starReqs }) {
     <TouchableOpacity activeOpacity={0.5} onPress={selectSelf}>
       <View style={[styles.levelContainer, starContainerStyles(stars)]}>
         <MonoText style={styles.levelText}>{levelNumber}</MonoText>
-        {/*stars > 0 && <View style={[styles.scoreCircle, { backgroundColor: starLightColor(stars) }]}>
-          <MonoText style={styles.scoreText} adjustsFontSizeToFit={true} numberOfLines={1}>{levelBest}</MonoText>
-        </View>*/}
+        {stars > 0 && <View style={styles.checkboxCircleContainer}>
+          <View style={[styles.checkboxCircle, { backgroundColor: starLightColor(stars)}]}>
+            <FontAwesome name="check" size={12} color="black" />
+          </View>
+        </View>}
       </View>
     </TouchableOpacity>
   );
@@ -33,6 +36,7 @@ const styles = StyleSheet.create({
     borderWidth: 3,
     borderRadius: 15,
     margin: 10,
+    marginBottom: 15,
     justifyContent: 'center',
     alignItems: 'center'
   },
@@ -47,19 +51,20 @@ const styles = StyleSheet.create({
   star: {
     margin: 2,
   },
-  scoreCircle: {
+  checkboxCircleContainer: {
     position: 'absolute',
-    top: -11,
-    right: -11,
-    width: 22,
-    height: 22,
+    bottom: -10,
+    left: 0,
+    flexDirection: 'row',
+    width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 11,
-    padding: 2,
   },
-  scoreText: {
-    fontSize: 13,
-    color: 'black',
-  },
+  checkboxCircle: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+  }
 });
