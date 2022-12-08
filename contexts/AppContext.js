@@ -6,7 +6,7 @@ const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
   const [levelBests, setLevelBests] = useState(levels.map(() => null));
-  const [screenName, setScreenName] = useState('level-select');
+  const [screenName, setScreenName] = useState('home');
   const [levelNumber, setLevelNumber] = useState(1);
 
   const levelBest = levelBests[levelNumber - 1];

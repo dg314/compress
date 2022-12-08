@@ -1,9 +1,9 @@
 export const starLightColor = (stars) => {
-  return ['#fff', '#EBA258', '#d2cdd5', '#FFD700'][stars];
+  return ['#6992fa', '#EBA258', '#d2cdd5', '#FFD700'][stars];
 }
 
 export const starDarkColor = (stars) => {
-  return ['#ddd', '#CD7F32', '#a7a5aa', '#D1B000'][stars];
+  return ['#4a70db', '#CD7F32', '#a7a5aa', '#D1B000'][stars];
 }
 
 export const starContainerStyles = (stars) => {

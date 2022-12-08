@@ -4,13 +4,14 @@ import levels from '../data/levels';
 import { useContext } from 'react';
 import AppContext from '../contexts/AppContext';
 import TopBar from './TopBar';
+import LevelSelectTopBar from './LevelSelectTopBar';
 
 export default function LevelSelect() {
-  const { setLevelNumber, levelBests } = useContext(AppContext);
+  const { levelBests } = useContext(AppContext);
 
   return (
     <>
-      <TopBar title="Select Level" />
+      <LevelSelectTopBar />
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollViewContent}>
         <View style={styles.levelsContainer}>
           {levels.map((level, index) => <LevelPreview key={index} levelNumber={index + 1} levelBest={levelBests[index]} starReqs={level.starReqs} />)}
